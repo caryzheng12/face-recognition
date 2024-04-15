@@ -6,6 +6,7 @@ import cv2
 import sys
 import os
 import face_recognition
+<<<<<<< Updated upstream
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 
@@ -13,6 +14,16 @@ import threading
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'biometric_recognition'))
 from biometric_recognition.recognize_faces import recognize_faces
 from utilities.lock_module import unlock_door
+=======
+import requests
+#from utilities.lock_module import unlock_door
+
+def notify_flask(user_name):
+    url = 'http://localhost:5000/face-detected'  # Adjust the URL based on your Flask app's URL
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url, json={'name': user_name}, headers=headers)
+    print(response.text)
+>>>>>>> Stashed changes
 
 # Initialize camera
 cap = cv2.VideoCapture(0)
@@ -69,6 +80,32 @@ def main():
             # You could process results here if needed
             pass        
         
+<<<<<<< Updated upstream
+=======
+            # Check if a known face is detected and unlock the door
+            for name, _ in last_names_scaled:
+                if name != "Unknown":
+                    print(f"Detected: {name}") 
+                    #unlock_door(name)
+                    notify_flask(name)
+                    break 
+
+        # Draw a box and name for each recognized face in the original frame using the last known data
+        for name, (top, right, bottom, left) in last_names_scaled:
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+            cv2.putText(frame, name, (left + 6, top - 6), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+
+        process_this_frame = not process_this_frame
+
+        # Display the resulting frame
+        cv2.imshow('Video', frame)
+
+        # Quit the program when 'q' is pressed or the window is closed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # When everything is done, release the capture and close the windows
+>>>>>>> Stashed changes
     cap.release()
     cv2.destroyAllWindows()
     

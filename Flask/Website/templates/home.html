@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Hello, {{ user.first_name }}</h1>
+    {% if user.profile_picture %}
+    <img src="{{ url_for('views.profile_picture', id=user.id) }}" alt="Profile Picture" style="width: 200px; height: auto;">
+    {% endif %}
+    <br><br>
+    <form action="{{ url_for('views.unlock') }}" method="post">
+        <button type="submit" class="btn btn-primary">Unlock</button>
+    </form>
+</div>
+{% endblock %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+  <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissable fade show" role="alert">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+{% endfor %}
+{% endif %}
+{% endwith %}
